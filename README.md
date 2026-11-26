@@ -127,6 +127,66 @@ python -m src.evaluate --model models/plant_disease_cnn.keras --test-dir data/te
 
 Evaluation reports test loss and accuracy, and prints a classification report and confusion matrix when scikit-learn is available.
 
+
+## Visualizations
+
+### CNN architecture
+
+The baseline network processes a `224 × 224 × 3` leaf image through three convolutional feature-extraction blocks, followed by a dense classifier.
+
+```mermaid
+flowchart TD
+    A["Input image<br/>224 × 224 × 3"] --> B["Conv2D<br/>32 filters · ReLU"]
+    B --> C["MaxPooling2D<br/>2 × 2"]
+    C --> D["Conv2D<br/>64 filters · ReLU"]
+    D --> E["MaxPooling2D<br/>2 × 2"]
+    E --> F["Conv2D<br/>128 filters · ReLU"]
+    F --> G["MaxPooling2D<br/>2 × 2"]
+    G --> H["Flatten"]
+    H --> I["Dense<br/>128 units · ReLU"]
+    I --> J["Output layer<br/>Softmax · one unit per class"]
+```
+
+### Training and evaluation workflow
+
+```mermaid
+flowchart TD
+    A["Plant leaf image dataset"] --> B["Train / validation / test folders"]
+    B --> C["Resize images to 224 × 224"]
+    C --> D["Normalize pixel values to [0, 1]"]
+    D --> E["Train CNN"]
+    E --> F["Validate after each epoch"]
+    F --> G["Reduce learning rate when validation loss plateaus"]
+    F --> H["Save best validation-loss checkpoint"]
+    E --> I["Save final model and training history"]
+    H --> J["Evaluate on held-out test set"]
+    I --> J
+    J --> K["Test loss, accuracy and classification report"]
+```
+
+### Add real training plots
+
+After a training run, use the values in `reports/training_history.json` to create and commit accuracy/loss plots. The repository does not include fabricated charts or performance numbers; the plots should be generated from your own experiment.
+
+Recommended plot files:
+
+```text
+reports/
+├── training_history.json
+├── accuracy_curve.png
+├── loss_curve.png
+├── confusion_matrix.png
+└── class_indices.json
+```
+
+You can display generated plots in this README with:
+
+```markdown
+![Training and validation accuracy](reports/accuracy_curve.png)
+![Training and validation loss](reports/loss_curve.png)
+![Test-set confusion matrix](reports/confusion_matrix.png)
+```
+
 ## Important notes
 
 - The uploaded source code defined a test directory but did not use it for evaluation. This repository adds a separate test-evaluation script.
