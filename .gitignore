@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+.env
+
+# Data and model artifacts
+data/
+models/*
+!models/.gitkeep
+reports/*
+!reports/.gitkeep
+*.h5
+*.keras
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
